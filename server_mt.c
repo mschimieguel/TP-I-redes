@@ -1,4 +1,5 @@
 #include "common.h"
+#include "list.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,6 +12,9 @@
 #include <pthread.h>
 
 #define BUFSZ 1024
+
+list_t *vaccine_sites;
+
 
 void usage(int argc,char**argv){
 	printf("Usage: %s <v4|v6> <server port>\n", argv[0]);
@@ -36,6 +40,13 @@ void* client_thread(void *data){
     char buf[BUFSZ];
     memset(buf, 0, BUFSZ);
     size_t count = recv(client_data->client_socket, buf, BUFSIZ-1, 0);
+	
+		
+	add_end(vaccine_sites, 1, 2);
+	add_end(vaccine_sites, 3, 2);
+	add_end(vaccine_sites, 313, 256);
+	print_list(vaccine_sites);
+
     printf("[msg] %s, %d bytes: %s\n ", client_addrstr, (int) count, buf);
     sprintf(buf,"remote endpoint %.1000s\n", client_addrstr);
     count = send(client_data->client_socket, buf, strlen(buf)+1, 0);
@@ -87,6 +98,8 @@ int main(int argc, char **argv){
 	char addrstr[BUFSZ];
 	addrtostr(addr, addrstr, BUFSZ);
 	printf("bound to %s, waiting connections\n", addrstr);
+
+	vaccine_sites = create_list();
 
 	while(1){
 		//accept retorna um novo socket
