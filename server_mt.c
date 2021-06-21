@@ -24,7 +24,7 @@ struct client_data{
 };
  
 void* client_thread(void *data){
-    struct client_data *client_data = (struct client_data *)client_data;
+    struct client_data *client_data = (struct client_data *)data;
     struct sockaddr *client_sockaddr = (struct sockaddr *) (&client_data->client_storage);
 
 
