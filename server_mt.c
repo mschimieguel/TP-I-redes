@@ -31,8 +31,8 @@ struct client_data{
 };
 char* commands(char* buf){	
 	
-	char command[5];
-	memset(command, 0, 5);
+	char command[COMMANDSZ];
+	memset(command, 0, COMMANDSZ);
 	int _X = -1,_Y = -1;
 	printf("buf: %s\n",buf);
 	sscanf(buf,"%s", command);
