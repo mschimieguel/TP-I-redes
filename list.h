@@ -1,6 +1,8 @@
 #ifndef list_H
 #define list_H
 
+#define POINTSZ 10
+
 typedef struct node{
 	int _X;
     int _Y;
@@ -29,6 +31,7 @@ void delete_list(list_t *list);
 void clean(list_t *list);
 
 void print_list(list_t *list);
+void sprint_list(char *buffer, list_t *list);
 
 int acess(list_t *list,int pos);
 

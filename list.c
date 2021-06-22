@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "list.h"
 
 list_t *create_list(){
@@ -77,6 +78,9 @@ void add(list_t *list, int _X, int _Y, int pos){
 }
 int remove_start(list_t *list){
     
+    if (list->size == 0)
+        return -1;
+
     node_t *to_free = list->head;
     int to_return = to_free->_X;
     list->head = list->head->next;
@@ -87,6 +91,8 @@ int remove_start(list_t *list){
 }
 int remove_end(list_t *list){
     
+    if (list->size == 0)
+        return -1;
     node_t *previus = list->head;
     while(previus->next != list->tail)
         previus = previus->next;
@@ -101,8 +107,10 @@ int remove_end(list_t *list){
     return to_return;
 }
 int remove_element(list_t *list, int pos){
-    
-    if (pos > 0 && pos < list->size - 1){
+    if (pos < 0){
+        return -1;
+    }
+    else if (pos > 0 && pos < list->size - 1){
         node_t *to_visit =list->head;
         node_t *to_free = NULL;
         for (int i = 0;i < pos-1;i++)
@@ -119,8 +127,8 @@ int remove_element(list_t *list, int pos){
     else if (pos == list->size - 1)
         return remove_end(list);
     else {
-        printf ("non-existent or not allowed position\n");
-        return -1;
+        //printf ("non-existent or not allowed position\n");
+        return -2;
     } 
         
 }
@@ -136,15 +144,15 @@ void clean(list_t *list){
     } 
 }
 void print_list(list_t *list){
-    if (list->head != NULL){
-        printf("list => size == %d; elements == { ",list->size);
-        node_t *to_visit=list->head;
-        while (to_visit != NULL){
-            if(to_visit == list->head)
-                printf("(%d,%d) ",to_visit->_X,to_visit->_Y);
+    if (list->size > 0){
+        printf("list => size == %d; elements == { ", list->size);
+        node_t *atual=list->head;
+        while (atual != NULL){
+            if(atual == list->head )
+                printf("(%d,%d) ", atual->_X, atual->_Y);
             else
-                printf(", (%d,%d) ",to_visit->_X,to_visit->_Y);
-            to_visit = to_visit->next;
+                printf(", (%d,%d) ", atual->_X, atual->_Y);
+            atual = atual->next;
         }
         printf("};\n");
     }
@@ -152,15 +160,34 @@ void print_list(list_t *list){
         printf("empty list \n");
     //printf("size == 0; elementos == {}\n");    
 }
-int search(list_t *list, int _X, int _Y){
-	if (list->head == NULL){
-		printf("Error, empty list!!");
-    	exit(1);
-	}
+void sprint_list(char *buffer, list_t *list){
+     if (list->size != 0){
+        //printf("list => size == %d; elements == { ",list->size);
+        node_t *atual = list->head;
+        char point[POINTSZ];
+        while (atual != NULL){
+            memset(point, 0, POINTSZ);
+            if (atual == list->head)
+                sprintf(point, "%d %d", atual->_X, atual->_Y);
+            else
+                sprintf(point, " %d %d", atual->_X, atual->_Y);
+            strcat(buffer,point);
+            atual = atual->next;
+        }
+    }
+    else 
+        printf("empty list \n");
+}
 
+int search(list_t *list, int _X, int _Y){
+	if (list->size == 0){
+		//printf("Error, empty list!!");
+    	//exit(1);
+        return -1;
+	}
     int pos = 0;
     node_t *atual = list->head;
-	while(atual != NULL && atual->_X != _X && atual->_Y != _Y){
+	while(atual != NULL && (atual->_X != _X || atual->_Y != _Y) ){
 		pos++;
         atual = atual->next;
 	}

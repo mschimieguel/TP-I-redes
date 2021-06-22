@@ -12,6 +12,9 @@
 #include <pthread.h>
 
 #define BUFSZ 1024
+#define MAXVACSITES 50
+#define RESSZ 30
+#define COMMANDSZ 5
 
 list_t *vaccine_sites;
 
@@ -26,6 +29,48 @@ struct client_data{
     int client_socket;
     struct sockaddr_storage client_storage;
 };
+char* commands(char* buf){	
+	
+	char command[5];
+	memset(command, 0, 5);
+	int _X = -1,_Y = -1;
+	printf("buf: %s\n",buf);
+	sscanf(buf,"%s", command);
+	char *response = (char*)malloc(RESSZ*sizeof(char));
+	memset(response, 0, RESSZ);
+	
+	if (strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0)
+		sscanf(buf,"%s %d %d", command, &_X, &_Y);
+	
+	if(strcmp(command, "add") == 0){
+		if (search(vaccine_sites, _X, _Y) == -1 && vaccine_sites->size < MAXVACSITES){
+			add_end(vaccine_sites, _X, _Y);
+			sprintf(response, "%d %d added" , _X, _Y);
+		}
+		else			
+			sprintf(response, "%d %d already exists" , _X, _Y);
+	}
+	else if(strcmp(command, "rm") == 0 ){
+		if (remove_element(vaccine_sites, search(vaccine_sites, _X, _Y)) != -1){
+			sprintf(response, "%d %d removed" , _X, _Y);
+		}
+		else
+			sprintf(response, "%d %d does not exist" , _X, _Y);
+	}
+	else if( strcmp(command, "list") == 0 ){
+		sprint_list(response,vaccine_sites);
+	}
+	else if (strcmp(command, "query") == 0 ){
+		//nearest(vaccine_sites, _X, _Y);
+	}
+	else{}
+
+
+	print_list(vaccine_sites);
+	printf("response: %s\n",response);
+	
+	return response;
+}
  
 void* client_thread(void *data){
     struct client_data *client_data = (struct client_data *)data;
@@ -41,15 +86,16 @@ void* client_thread(void *data){
     memset(buf, 0, BUFSZ);
     size_t count = recv(client_data->client_socket, buf, BUFSIZ-1, 0);
 	
-		
-	add_end(vaccine_sites, 1, 2);
-	add_end(vaccine_sites, 3, 2);
-	add_end(vaccine_sites, 313, 256);
-	print_list(vaccine_sites);
+	char *response = commands(buf);
 
+	
     printf("[msg] %s, %d bytes: %s\n ", client_addrstr, (int) count, buf);
-    sprintf(buf,"remote endpoint %.1000s\n", client_addrstr);
-    count = send(client_data->client_socket, buf, strlen(buf)+1, 0);
+    strcpy(buf,response);
+	memset(response, 0, RESSZ);
+	//sprintf(buf,"remote endpoint %.1000s\n", client_addrstr);
+	//sprintf(buf,"\n",);
+    //count = send(client_data->client_socket, buf, strlen(buf)+1, 0);
+	count = send(client_data->client_socket, buf, strlen(buf)+1, 0);
     if( count != strlen(buf) + 1 )
         logexit("send");
     close(client_data->client_socket);
