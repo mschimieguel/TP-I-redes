@@ -11,13 +11,11 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define BUFSZ 1024
-#define MAXVACSITES 50
-#define RESSZ 30
-#define COMMANDSZ 5
+
 
 list_t *vaccine_sites;
-
+char *response;
+int alive = 1;
 
 void usage(int argc,char**argv){
 	printf("Usage: %s <v4|v6> <server port>\n", argv[0]);
@@ -33,11 +31,14 @@ char* commands(char* buf){
 	
 	char command[COMMANDSZ];
 	memset(command, 0, COMMANDSZ);
-	int _X = -1,_Y = -1;
-	printf("buf: %s\n",buf);
-	sscanf(buf,"%s", command);
-	char *response = (char*)malloc(RESSZ*sizeof(char));
+	response = (char*)malloc(RESSZ*sizeof(char));
 	memset(response, 0, RESSZ);
+	
+	
+	int _X = -1,_Y = -1;
+	//printf("buf: %s\n",buf);
+	sscanf(buf,"%s", command);
+	
 	
 	if (strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0)
 		sscanf(buf,"%s %d %d", command, &_X, &_Y);
@@ -63,11 +64,17 @@ char* commands(char* buf){
 	else if (strcmp(command, "query") == 0 ){
 		snearest(response, vaccine_sites, _X, _Y);
 	}
+	else if(strcmp(command, "kill") == 0){
+		//printf("entrou no if kill\n");
+		response = (char*)malloc(5*sizeof(char));
+		response[0] = 'k';response[1] = 'i';response[2] = 'l';response[3] = 'l';response[4] = '\0';
+		alive = 0;
+	}
 	else{}
 
 
 	print_list(vaccine_sites);
-	printf("response: %s\n",response);
+	//printf("response: %s\n",response);
 	
 	return response;
 }
@@ -83,23 +90,33 @@ void* client_thread(void *data){
 
 
     char buf[BUFSZ];
-    memset(buf, 0, BUFSZ);
-    size_t count = recv(client_data->client_socket, buf, BUFSIZ-1, 0);
 	
-	char *response = commands(buf);
-
-	
-    printf("[msg] %s, %d bytes: %s\n ", client_addrstr, (int) count, buf);
-    strcpy(buf,response);
-	memset(response, 0, RESSZ);
-	//sprintf(buf,"remote endpoint %.1000s\n", client_addrstr);
-	//sprintf(buf,"\n",);
-    //count = send(client_data->client_socket, buf, strlen(buf)+1, 0);
-	count = send(client_data->client_socket, buf, strlen(buf)+1, 0);
-    if( count != strlen(buf) + 1 )
-        logexit("send");
+	while(1){
+			
+		memset(buf, 0, BUFSZ);
+		size_t count = recv(client_data->client_socket, buf, BUFSIZ-1, 0);
+		
+		
+		response = commands(buf);
+		//printf("client_thread response: %s\n",response);
+		if (strcmp(response, "kill" ) == 0){
+			//printf("client_thread if\n");
+			alive = 0;
+			break;
+		}
+		
+		printf("[msg] %s, %d bytes: %s\n ", client_addrstr, (int) count, buf);
+		strcpy(buf,response);
+		memset(response, 0, RESSZ);
+		//sprintf(buf,"remote endpoint %.1000s\n", client_addrstr);
+		//sprintf(buf,"\n",);
+		//count = send(client_data->client_socket, buf, strlen(buf)+1, 0);
+		count = send(client_data->client_socket, buf, strlen(buf)+1, 0);
+		if( count != strlen(buf) + 1 )
+			logexit("send");
+	}		
     close(client_data->client_socket);
-
+	//printf("quebrou while client_thread\n");
     pthread_exit(EXIT_SUCCESS);
 }   
 
@@ -147,7 +164,8 @@ int main(int argc, char **argv){
 
 	vaccine_sites = create_list();
 
-	while(1){
+	while(alive){
+		
 		//accept retorna um novo socket
 		//client_sockaddr recebe de accept o endereco deo client  
 		struct sockaddr_storage client_storage;
@@ -171,7 +189,13 @@ int main(int argc, char **argv){
 
         pthread_t tid;
         pthread_create(&tid, NULL, client_thread, cdata);
-		
+		printf("response: %s\n", response);
+		printf("alive: %d\n",alive);
+		//printf("strcmp: %d\n", strcmp(response,"kill"));
+		if (response && strstr(response,"kill") == 0){
+			printf("main if\n");
+			break;			
+		}
 	}
 	exit(EXIT_SUCCESS);
 }
