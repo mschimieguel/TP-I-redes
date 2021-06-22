@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+#include <limits.h>
 #include "list.h"
 
 list_t *create_list(){
@@ -209,4 +211,20 @@ int acess(list_t *list, int pos){
         printf ("non-existent or not allowed position\n");
         return -1;
     } 
+}
+
+void snearest(char *buffer, list_t *list, int  _X, int _Y){
+    
+    int min = INT_MAX;
+    node_t *atual = list->head;
+	while( atual != NULL ){
+        if (distance(atual->_X, atual->_Y, _X, _Y) < min){
+            min = distance(atual->_X, atual->_Y, _X, _Y);
+            sprintf(buffer, "%d %d", atual->_X, atual->_Y);
+        }
+        atual = atual->next;
+	}
+}
+int distance(int _X1, int _Y1, int _X2, int _Y2){
+    return sqrt( ((_X2 -_X1)*(_X2 -_X1)) + ((_Y2 -_Y1)*(_Y2 -_Y1))  );
 }

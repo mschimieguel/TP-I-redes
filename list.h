@@ -33,6 +33,9 @@ void clean(list_t *list);
 void print_list(list_t *list);
 void sprint_list(char *buffer, list_t *list);
 
-int acess(list_t *list,int pos);
+int acess(list_t *list, int pos);
+
+void snearest(char *buffer, list_t *list, int  _X, int _Y);
+int distance(int _X1, int _Y1, int _X2, int _Y2);
 
 #endif

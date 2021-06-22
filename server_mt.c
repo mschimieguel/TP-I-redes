@@ -61,7 +61,7 @@ char* commands(char* buf){
 		sprint_list(response,vaccine_sites);
 	}
 	else if (strcmp(command, "query") == 0 ){
-		//nearest(vaccine_sites, _X, _Y);
+		snearest(response, vaccine_sites, _X, _Y);
 	}
 	else{}
 
