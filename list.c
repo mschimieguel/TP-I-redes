@@ -229,7 +229,7 @@ void snearest(char *buffer, list_t *list, int  _X, int _Y){
 	    }
     }
     else{
-        sprintf(buffer,"“none”");
+        sprintf(buffer,"none");
     }
 }
 int distance(int _X1, int _Y1, int _X2, int _Y2){
