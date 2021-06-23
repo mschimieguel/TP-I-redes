@@ -5,7 +5,7 @@
 
 
 #define MAXVACSITES 50
-#define RESSZ 30
+#define RESSZ 100
 #define COMMANDSZ 5
 #define BUFSZ 1024
 
