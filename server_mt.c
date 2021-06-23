@@ -42,16 +42,29 @@ char* commands(char* buf){
 	if (strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0){
 		sscanf(buf,"%s %d %d", command, &_X, &_Y);
 		if(_X < 0 || _X > 9999 || _Y < 0 || _Y > 9999 ){
-			sprintf(response,"position not allowed :  0 <=0 X <= 9999 and 0 <= Y <= 9999");
+			sprintf(response,"position not allowed");
 			print_list(vaccine_sites);
 			return response;
 		}
 	}
+	else{
+		if (strcmp(command, "list") == 0){}
+		else {
+			//sprintf(response,"command not allowed");
+			//print_list(vaccine_sites);
+			//return response;
+		}
+	}
+	
 		
 	if(strcmp(command, "add") == 0){
-		if (search(vaccine_sites, _X, _Y) == -1 && vaccine_sites->size < MAXVACSITES){
-			add_end(vaccine_sites, _X, _Y);
-			sprintf(response, "%d %d added" , _X, _Y);
+		if (search(vaccine_sites, _X, _Y) == -1){
+			if (vaccine_sites->size < MAXVACSITES){
+				add_end(vaccine_sites, _X, _Y);
+				sprintf(response, "%d %d added", _X, _Y);
+			}
+			else
+				sprintf(response, "limit exceeded");
 		}
 		else			
 			sprintf(response, "%d %d already exists" , _X, _Y);
