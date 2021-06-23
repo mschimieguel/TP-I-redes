@@ -181,7 +181,7 @@ void sprint_list(char *buffer, list_t *list){
         }
     }
     else 
-        sprintf(buffer,"“none");
+        sprintf(buffer,"“none”");
 }
 
 int search(list_t *list, int _X, int _Y){
