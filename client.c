@@ -22,7 +22,6 @@ void usage(int argc,char**argv){
 int main(int argc,char**argv){
 	if (argc < 3)
 		usage(argc, argv);
-	
 	struct sockaddr_storage storage;
 	if (addrparse(argv[1], argv[2], &storage) != 0 ){
 		usage(argc, argv);
@@ -45,13 +44,14 @@ int main(int argc,char**argv){
 		char buf[BUFSZ];
 		//inicializar buffer com 0 
 		memset(buf, 0, BUFSZ);
-		printf("<mensagem> \n");
+		printf("<mensagem>\n");
 		fgets(buf, BUFSZ, stdin);
 		char command[COMMANDSZ];
 		memset(command, 0, COMMANDSZ);
 		
 		int _X = -1,_Y = -1;
-		printf("buf: %s",buf);
+		//printf("buf: %s",buf);
+		
 		sscanf(buf,"%s", command);
 
 		if (strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0)
@@ -61,14 +61,7 @@ int main(int argc,char**argv){
 
 		//numero de bytes
 		size_t count = send(s, buf, strlen(buf)+1, 0);
-		if (strcmp(command, "kill") == 0 ){
-			printf("entrou no kill if\n");
-			for (int k = 0;	k < 999999999;k++){k = k + 1 -1;}
-			for (int k = 0;	k < 999999999;k++){k = k + 1 -1;}
-			for (int k = 0;	k < 999999999;k++){k = k + 1 -1;}
-			//conexao terminada 			
-			//break;
-		}
+		
 		if (count != strlen(buf)+1)
 			logexit("send");
 
@@ -77,13 +70,19 @@ int main(int argc,char**argv){
 		while(1){
 			count = recv(s, buf + total,BUFSZ - total,0);
 			total += count;
-			if (count == 0 || strcmp(command, "list") == 0 || strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0 ){	
+			if (count == 0 || strcmp(command, "list") == 0 || strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0  || strcmp(command, "kill") == 0 ){	
 				//conexao terminada 			
 				break;
 			}	
 		}			
-		printf(" received  %u bytes\n", total);
-		puts(buf);
+		printf(" received  %u bytes ", total);
+		printf("buf: %s",buf);
+		printf("\n");
+		if (strcmp(command, "kill") == 0 ){
+			//for (int k = 0;	k < 999999999;k++){k = k + 1 -1;}
+			//conexao terminada 			
+			break;
+		}
 	}
 	close(s);
 	exit(EXIT_SUCCESS);
