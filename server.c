@@ -9,7 +9,6 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#define BUFSZ 1024
 
 void usage(int argc,char**argv){
 	printf("Usage: %s <v4|v6> <server port>\n", argv[0]);
@@ -79,7 +78,7 @@ int main(int argc, char **argv){
 		memset(buf, 0, BUFSZ);
 		size_t count = recv(client_socket, buf, BUFSIZ-1, 0);
 		printf("[msg] %s, %d bytes: %s\n", client_addrstr, (int) count, buf);
-		sprintf(buf,"remote endpoint %.1000s\n", client_addrstr);
+		sprintf(buf,"remote endpoint %.450s\n", client_addrstr);
 		count = send(client_socket, buf, strlen(buf)+1, 0);
 		if( count != strlen(buf) + 1 )
 			logexit("send");

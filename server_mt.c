@@ -29,9 +29,9 @@ struct client_data{
 char* commands(char* buf){	
 	
 	char command[COMMANDSZ];
-	memset(command, 0, COMMANDSZ);
+	memset(command, '\n', COMMANDSZ);
 	char *response = (char*)malloc(RESSZ*sizeof(char));
-	memset(response, 0, RESSZ);
+	memset(response, '\n', RESSZ);
 	
 	
 	int _X = -1,_Y = -1;
@@ -77,10 +77,32 @@ char* commands(char* buf){
 			sprintf(response, "%d %d does not exist" , _X, _Y);
 	}
 	else if( strcmp(command, "list") == 0 ){
-		sprint_list(response,vaccine_sites);
+		if(vaccine_sites->size > 0){
+			memset(response, 0, RESSZ);
+			sprint_list(response,vaccine_sites);
+			for(int i = 0;i < RESSZ ;i++){
+				if(response[i] == '\0'){
+					response[i] = '\n';
+				}
+			}
+		}
+		else{
+			sprint_list(response,vaccine_sites);
+		}
 	}
 	else if (strcmp(command, "query") == 0 ){
-		snearest(response, vaccine_sites, _X, _Y);
+		if(vaccine_sites->size > 0){
+			memset(response, 0, RESSZ);
+			snearest(response, vaccine_sites, _X, _Y);
+			for(int i = 0;i < RESSZ ;i++){
+				if(response[i] == '\0'){
+					response[i] = '\n';
+				}
+			}
+		}
+		else{
+			snearest(response, vaccine_sites, _X, _Y);
+		}
 	}
 	else if(strcmp(command, "kill") == 0){
 		//printf("entrou no if kill\n");
@@ -97,7 +119,8 @@ char* commands(char* buf){
 }
  
 void* client_thread(void *data){
-    struct client_data *client_data = (struct client_data *)data;
+    
+	struct client_data *client_data = (struct client_data *)data;
     struct sockaddr *client_sockaddr = (struct sockaddr *) (&client_data->client_storage);
 
 
@@ -109,24 +132,54 @@ void* client_thread(void *data){
     char buf[BUFSZ];
 	//while para poder criar as threads
 	while(1){
-			
-		memset(buf, 0, BUFSZ);
+		int size_response = BUFSZ;	
+		memset(buf, '\n', BUFSZ);
 		size_t count = recv(client_data->client_socket, buf, BUFSIZ-1, 0);
 		
 		
 		char *res = commands(buf);
-		printf("client_thread response: %s\n",res);
+		//printf("client_thread response: %s\n",res);
 		
 		
 		printf("[msg] %s, %d bytes: %s\n ", client_addrstr, (int) count, buf);
 		strcpy(buf,res);
-		memset(res, 0, RESSZ);
+		/* if (buf[strlen(res)+1] == '\0'){
+			printf("SIM1\n");
+			buf[strlen(res)+1] = '1';
+		}
+		 */
+		int t = 0;
+		for(int i=0; i < BUFSZ; i++){
+			if(buf[i] == '\0'){
+				buf[i] = '\n';
+				t++;
+			}
+		}
+		printf("Number of end of strinf in buf: %d \n",t);
+		t = 0;
+		for(int i=0; i < BUFSZ; i++){
+			if(buf[i] == '\0'){
+				t++;
+			}
+		}
+		
+		memset(res, '\n', RESSZ);
 		//sprintf(buf,"remote endpoint %.1000s\n", client_addrstr);
 		//sprintf(buf,"\n",);
 		//count = send(client_data->client_socket, buf, strlen(buf)+1, 0);
-		count = send(client_data->client_socket, buf, strlen(buf)+1, 0);
-		if( count != strlen(buf) + 1 )
-			logexit("send");
+		for(int i=0; i < BUFSZ; i++){
+			if(buf[i] == '\n'){
+				size_response--;
+			}
+		}
+		printf("size_response %d\n",size_response);
+		//count = send(client_data->client_socket, buf, strlen(buf), 0);
+		count = send(client_data->client_socket, buf, size_response+1, 0);
+		printf("tamanho buf: %ld \n",strlen(buf));
+		//if( count != strlen(buf) + 1 )
+		//	logexit("send");
+		//if( count != strlen(buf) + 1 )
+		//	logexit("send");
 		//printf("fim while thread\n");	
 	}		
     close(client_data->client_socket);
@@ -178,7 +231,7 @@ int main(int argc, char **argv){
 	printf("bound to %s, waiting connections\n", addrstr);
 
 	vaccine_sites = create_list();
-	int n_threads = 0;
+	//int n_threads = 0;
 	while(1){
 		
 		//accept retorna um novo socket
@@ -205,8 +258,8 @@ int main(int argc, char **argv){
         pthread_t tid;
         pthread_create(&tid, NULL, client_thread, cdata);
 
-		printf("n_threads: %d\n",n_threads);
-		n_threads++;
+		//printf("n_threads: %d\n",n_threads);
+		//n_threads++;
 	}
 	exit(EXIT_SUCCESS);
 }

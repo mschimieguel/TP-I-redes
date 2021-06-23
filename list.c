@@ -170,8 +170,10 @@ void sprint_list(char *buffer, list_t *list){
         //printf("list => size == %d; elements == { ",list->size);
         node_t *atual = list->head;
         char point[POINTSZ];
+        
         while (atual != NULL){
-            memset(point, 0, POINTSZ);
+            memset(point, '0', POINTSZ);
+            
             if (atual == list->head)
                 sprintf(point, "%d %d", atual->_X, atual->_Y);
             else
@@ -179,6 +181,7 @@ void sprint_list(char *buffer, list_t *list){
             strcat(buffer,point);
             atual = atual->next;
         }
+        
     }
     else 
         sprintf(buffer,"none");

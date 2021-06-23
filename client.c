@@ -17,7 +17,6 @@ void usage(int argc,char**argv){
 	exit(EXIT_FAILURE);
 }
 
-#define BUFSZ 1024
 
 int main(int argc,char**argv){
 	if (argc < 3)
@@ -67,14 +66,41 @@ int main(int argc,char**argv){
 
 		memset(buf, 0, BUFSZ);
 		unsigned total = 0;
+		
 		while(1){
 			count = recv(s, buf + total,BUFSZ - total,0);
 			total += count;
-			if (count == 0 || strcmp(command, "list") == 0 || strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0  || strcmp(command, "kill") == 0 ){	
-				//conexao terminada 			
+			/* if (count == 0 || strcmp(command, "list") == 0 || strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0  || strcmp(command, "kill") == 0 ){	 */
+				//conexao terminada 
+			if(count == 0){			
 				break;
-			}	
-		}			
+			}
+			if(count == 500){
+				break;
+			}
+			/* if(count == 5 && strstr(buf,"none\n")){
+				break;
+			}
+			if(count >= 9 && count <= 15 && strstr(buf,"added\n")){
+				break;
+			}
+			if(strstr(buf,"already exists\n")){
+				break;
+			}
+			if(strstr(buf,"removed\n")){
+				break;
+			}
+			if(strstr(buf,"does not exist\n")){
+				break;
+			} */
+			if(strchr(buf,'\n')){
+				break;
+			}
+		}
+		if (buf[total+1] == '\0'){
+			printf("SIM2\n");
+			//buf[strlen(total)+1] = '0';
+		}				
 		printf(" received  %u bytes ", total);
 		printf("buf: %s",buf);
 		printf("\n");
