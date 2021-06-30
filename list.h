@@ -1,7 +1,7 @@
 #ifndef list_H
 #define list_H
 
-#define POINTSZ 10
+#define POINTSZ 20
 
 typedef struct node{
 	int _X;

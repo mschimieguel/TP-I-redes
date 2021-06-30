@@ -29,9 +29,9 @@ struct client_data{
 char* commands(char* buf){	
 	
 	char command[COMMANDSZ];
-	memset(command, '\n', COMMANDSZ);
+	memset(command, 0, COMMANDSZ);
 	char *response = (char*)malloc(RESSZ*sizeof(char));
-	memset(response, '\n', RESSZ);
+	memset(response, 0, RESSZ);
 	
 	
 	int _X = -1,_Y = -1;
@@ -78,13 +78,7 @@ char* commands(char* buf){
 	}
 	else if( strcmp(command, "list") == 0 ){
 		if(vaccine_sites->size > 0){
-			memset(response, 0, RESSZ);
 			sprint_list(response,vaccine_sites);
-			for(int i = 0;i < RESSZ ;i++){
-				if(response[i] == '\0'){
-					response[i] = '\n';
-				}
-			}
 		}
 		else{
 			sprint_list(response,vaccine_sites);
@@ -92,13 +86,7 @@ char* commands(char* buf){
 	}
 	else if (strcmp(command, "query") == 0 ){
 		if(vaccine_sites->size > 0){
-			memset(response, 0, RESSZ);
 			snearest(response, vaccine_sites, _X, _Y);
-			for(int i = 0;i < RESSZ ;i++){
-				if(response[i] == '\0'){
-					response[i] = '\n';
-				}
-			}
 		}
 		else{
 			snearest(response, vaccine_sites, _X, _Y);
@@ -107,7 +95,7 @@ char* commands(char* buf){
 	else if(strcmp(command, "kill") == 0){
 		//printf("entrou no if kill\n");
 		//response = (char*)malloc(5*sizeof(char));
-		sprintf(response,"kill");
+		//sprintf(response,"kill");
 	}
 	else{}
 
@@ -133,22 +121,22 @@ void* client_thread(void *data){
 	//while para poder criar as threads
 	while(1){
 		int size_response = BUFSZ;	
-		memset(buf, '\n', BUFSZ);
+		memset(buf, 0, BUFSZ);
 		size_t count = recv(client_data->client_socket, buf, BUFSIZ-1, 0);
 		
 		
 		char *res = commands(buf);
 		//printf("client_thread response: %s\n",res);
 		
-		
-		printf("[msg] %s, %d bytes: %s\n ", client_addrstr, (int) count, buf);
+		printf("[msg] %s, %d bytes\n ", client_addrstr, (int) count);
+		//printf("[msg] %s, %d bytes: %s\n ", client_addrstr, (int) count, buf);
 		strcpy(buf,res);
 		/* if (buf[strlen(res)+1] == '\0'){
 			printf("SIM1\n");
 			buf[strlen(res)+1] = '1';
 		}
 		 */
-		int t = 0;
+		/* int t = 0;
 		for(int i=0; i < BUFSZ; i++){
 			if(buf[i] == '\0'){
 				buf[i] = '\n';
@@ -161,20 +149,21 @@ void* client_thread(void *data){
 			if(buf[i] == '\0'){
 				t++;
 			}
-		}
+		} */
 		
-		memset(res, '\n', RESSZ);
+		memset(res, 0, RESSZ);
 		//sprintf(buf,"remote endpoint %.1000s\n", client_addrstr);
 		//sprintf(buf,"\n",);
 		//count = send(client_data->client_socket, buf, strlen(buf)+1, 0);
 		for(int i=0; i < BUFSZ; i++){
-			if(buf[i] == '\n'){
+			if(buf[i] == '\0'){
 				size_response--;
 			}
 		}
+		sprintf(&buf[size_response],"\n");
 		printf("size_response %d\n",size_response);
 		//count = send(client_data->client_socket, buf, strlen(buf), 0);
-		count = send(client_data->client_socket, buf, size_response+1, 0);
+		count = send(client_data->client_socket, buf, size_response + 1, 0);
 		printf("tamanho buf: %ld \n",strlen(buf));
 		//if( count != strlen(buf) + 1 )
 		//	logexit("send");

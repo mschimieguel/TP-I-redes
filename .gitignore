@@ -5,3 +5,5 @@ common.o
 server_mt
 server
 list.o
+teste.c
+teste.o

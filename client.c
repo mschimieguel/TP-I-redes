@@ -38,13 +38,17 @@ int main(int argc,char**argv){
 	addrtostr(addr,addrstr, BUFSZ);
 	printf("connected to %s\n", addrstr);
 
+	char buf[BUFSZ];
 	while(1){		
 	
-		char buf[BUFSZ];
+		
 		//inicializar buffer com 0 
 		memset(buf, 0, BUFSZ);
-		printf("<mensagem>\n");
+		//printf("<mensagem>\n");
+		//fflush(stdin);
 		fgets(buf, BUFSZ, stdin);
+		if(strlen(buf) == 0)
+			break;
 		char command[COMMANDSZ];
 		memset(command, 0, COMMANDSZ);
 		
@@ -72,6 +76,8 @@ int main(int argc,char**argv){
 			total += count;
 			/* if (count == 0 || strcmp(command, "list") == 0 || strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0  || strcmp(command, "kill") == 0 ){	 */
 				//conexao terminada 
+			printf("ciclo: count = %ld\n",count);
+			printf("Size of  buf: %ld\n",strlen(buf));
 			if(count == 0){			
 				break;
 			}
@@ -93,17 +99,18 @@ int main(int argc,char**argv){
 			if(strstr(buf,"does not exist\n")){
 				break;
 			} */
-			if(strchr(buf,'\n')){
+			if((strchr(buf,'\n'))){
 				break;
 			}
 		}
 		if (buf[total+1] == '\0'){
-			printf("SIM2\n");
+			//printf("SIM2\n");
 			//buf[strlen(total)+1] = '0';
 		}				
-		printf(" received  %u bytes ", total);
-		printf("buf: %s",buf);
-		printf("\n");
+		//printf(" received  %u bytes ", total);
+		//printf("buf: %s",buf);
+		printf("%s",buf);
+		//printf("\n");
 		if (strcmp(command, "kill") == 0 ){
 			//for (int k = 0;	k < 999999999;k++){k = k + 1 -1;}
 			//conexao terminada 			

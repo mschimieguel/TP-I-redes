@@ -172,13 +172,13 @@ void sprint_list(char *buffer, list_t *list){
         char point[POINTSZ];
         
         while (atual != NULL){
-            memset(point, '0', POINTSZ);
             
             if (atual == list->head)
                 sprintf(point, "%d %d", atual->_X, atual->_Y);
             else
                 sprintf(point, " %d %d", atual->_X, atual->_Y);
             strcat(buffer,point);
+            printf("%s\n",buffer);
             atual = atual->next;
         }
         
@@ -186,6 +186,37 @@ void sprint_list(char *buffer, list_t *list){
     else 
         sprintf(buffer,"none");
 }
+
+/* void sprint_list(char *buffer, list_t *list){
+     if (list->size != 0){
+        //printf("list => size == %d; elements == { ",list->size);
+        node_t *atual = list->head;
+        //char *point; 
+        char *_Xstr;
+        char *_Ystr;
+        int count = 0;
+        //int size = 0;
+        while (atual != NULL){
+            itoa(atual->_X, _Xstr,10);
+            itoa(atual->_Y, _Ystr, 10);
+            for (int i = count; i < count + strlen(_Xstr); i++){
+                buffer[i] = _Xstr[i - count];
+            }
+            buffer[count + strlen(_Xstr)] = ' ';
+            count += strlen(_Xstr) + 1;
+            for (int i = count; i < count + strlen(_Ystr); i++){
+                buffer[i] = _Ystr[i - count];
+            }
+            buffer[count + strlen(_Ystr)] = ' ';
+            count += strlen(_Ystr) +1;
+            
+            //printf("%s\n\n\n\n\n\n\n",buffer);
+            atual = atual->next;
+        }       
+    }
+    else 
+        sprintf(buffer,"none");
+} */
 
 int search(list_t *list, int _X, int _Y){
 	if (list->size == 0){
@@ -224,7 +255,7 @@ void snearest(char *buffer, list_t *list, int  _X, int _Y){
          int min = INT_MAX;
         node_t *atual = list->head;
 	    while( atual != NULL ){
-            if (distance(atual->_X, atual->_Y, _X, _Y) < min){
+            if (distance(atual->_X, atual->_Y, _X, _Y) <= min){
                 min = distance(atual->_X, atual->_Y, _X, _Y);
                 sprintf(buffer, "%d %d", atual->_X, atual->_Y);
             }
