@@ -257,27 +257,27 @@ int acess(list_t *list, int pos){
     } 
 }
 
-/* void snearest(char *buffer, int pos, list_t *list, int  _X, int _Y){
+void snearest(char *buffer, int pos, list_t *list, int  _X, int _Y){
     if(list->size > 0){
-         int min = INT_MAX;
-         int min_Y = -1;
-         int min_X = -1;
+        float min = (float)INT_MAX;
+        int min_Y = -1;
+        int min_X = -1;
 
         node_t *atual = list->head;
-	    while( atual != NULL ){
+        while( atual != NULL ){
             if (distance(atual->_X, atual->_Y, _X, _Y) < min){
                 min = distance(atual->_X, atual->_Y, _X, _Y);
                 min_X = atual->_X;
                 min_Y = atual->_Y;
             }
             atual = atual->next;
-	    }
-        sprintf(&buffer[pos], " %d %d \n", min_X , min_Y);
+        }
+        sprintf(&buffer[pos], "%d %d\n", min_X , min_Y);
     }
     else{
         sprintf(&buffer[pos],"none\n");
     }
-} */
-/* int distance(int _X1, int _Y1, int _X2, int _Y2){
+} 
+ float distance(int _X1, int _Y1, int _X2, int _Y2){
     return sqrt( ((_X2 -_X1)*(_X2 -_X1)) + ((_Y2 -_Y1)*(_Y2 -_Y1))  );
-} */
+} 

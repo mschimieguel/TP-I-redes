@@ -30,9 +30,9 @@ struct client_data{
     struct sockaddr_storage client_storage;
 };
 
-float distance(int _X1, int _Y1, int _X2, int _Y2){
+/* float distance(int _X1, int _Y1, int _X2, int _Y2){
     return sqrt( ((_X2 -_X1)*(_X2 -_X1)) + ((_Y2 -_Y1)*(_Y2 -_Y1))  );
-}
+} */
 
 char* commands(char* buf){	
 	
@@ -114,31 +114,9 @@ char* commands(char* buf){
 			}
 		}
 		else if (strcmp(command, "query") == 0 ){
-			if(vaccine_sites->size > 0){
-				float min = (float)INT_MAX;
-				int min_Y = -1;
-				int min_X = -1;
-
-				node_t *atual = vaccine_sites->head;
-				while( atual != NULL ){
-					if (distance(atual->_X, atual->_Y, _X, _Y) < min){
-						min = distance(atual->_X, atual->_Y, _X, _Y);
-						min_X = atual->_X;
-						min_Y = atual->_Y;
-					}
-					atual = atual->next;
-				}
-				sprintf(&response[response_size], "%d %d\n", min_X , min_Y);
-			}
-			else{
-				sprintf(&response[response_size],"none\n");
-			}
-			/* if(vaccine_sites->size > 0){
-				snearest(response, response_size+1, vaccine_sites, _X, _Y);
-			}
-			else{
-				snearest(response, response_size+1, vaccine_sites, _X, _Y);
-			} */
+			
+				snearest(response, response_size, vaccine_sites, _X, _Y);
+			
 		}
 		else if(strcmp(command, "kill") == 0){
 			printf("entrou no if kill\n");
