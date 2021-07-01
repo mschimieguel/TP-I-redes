@@ -30,7 +30,7 @@ struct client_data{
     struct sockaddr_storage client_storage;
 };
 
-int distance(int _X1, int _Y1, int _X2, int _Y2){
+float distance(int _X1, int _Y1, int _X2, int _Y2){
     return sqrt( ((_X2 -_X1)*(_X2 -_X1)) + ((_Y2 -_Y1)*(_Y2 -_Y1))  );
 }
 
@@ -115,7 +115,7 @@ char* commands(char* buf){
 		}
 		else if (strcmp(command, "query") == 0 ){
 			if(vaccine_sites->size > 0){
-				int min = INT_MAX;
+				float min = (float)INT_MAX;
 				int min_Y = -1;
 				int min_X = -1;
 
@@ -149,7 +149,7 @@ char* commands(char* buf){
 		//sprintf(&response[response_size],"\n");
 	}
 
-		//print_list(vaccine_sites);
+		print_list(vaccine_sites);
 		//printf("response: %s\n",response);
 	
 	return response;
