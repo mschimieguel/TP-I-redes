@@ -175,16 +175,23 @@ void sprint_list(char *buffer, list_t *list){
             
             if (atual == list->head)
                 sprintf(point, "%d %d", atual->_X, atual->_Y);
-            else
-                sprintf(point, " %d %d", atual->_X, atual->_Y);
+            else{
+                if(atual->next != NULL){
+                    sprintf(point, " %d %d", atual->_X, atual->_Y);
+                }
+                else{
+                    sprintf(point, " %d %d\n", atual->_X, atual->_Y);
+                }                    
+            }
+               
             strcat(buffer,point);
-            printf("%s\n",buffer);
+            //printf("%s\n",buffer);
             atual = atual->next;
         }
         
     }
     else 
-        sprintf(buffer,"none");
+        sprintf(buffer,"none\n");
 }
 
 /* void sprint_list(char *buffer, list_t *list){
@@ -253,17 +260,22 @@ int acess(list_t *list, int pos){
 void snearest(char *buffer, list_t *list, int  _X, int _Y){
     if(list->size > 0){
          int min = INT_MAX;
+         int min_Y = -1;
+         int min_X = -1;
+
         node_t *atual = list->head;
 	    while( atual != NULL ){
             if (distance(atual->_X, atual->_Y, _X, _Y) <= min){
                 min = distance(atual->_X, atual->_Y, _X, _Y);
-                sprintf(buffer, "%d %d", atual->_X, atual->_Y);
+                min_X = atual->_X;
+                min_Y = atual->_Y;
             }
             atual = atual->next;
 	    }
+        sprintf(buffer, "%d %d\n", min_X , min_Y);
     }
     else{
-        sprintf(buffer,"none");
+        sprintf(buffer,"none\n");
     }
 }
 int distance(int _X1, int _Y1, int _X2, int _Y2){
