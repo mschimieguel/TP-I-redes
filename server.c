@@ -198,8 +198,8 @@ void* client_thread(void *data){
 		strcpy(buf,res);
 		if (strlen(buf) == 0){
 			printf("KILL\n");
-			count = send(client_data->client_socket, buf, 0, 0);
-			break;
+			count = send(client_data->client_socket, buf, 1, 0);
+			//break;
 		}
 		/* if (buf[strlen(res)+1] == '\0'){
 			printf("SIM1\n");
