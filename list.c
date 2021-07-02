@@ -160,14 +160,11 @@ void print_list(list_t *list){
     }
     else {
        printf("empty list \n");    
-       //printf("empty\n");
     }
-        
-    //printf("size == 0; elementos == {}\n");    
 }
 void sprint_list(char *buffer, list_t *list){
      if (list->size != 0){
-        //printf("list => size == %d; elements == { ",list->size);
+       
         node_t *atual = list->head;
         char point[POINTSZ];
         
@@ -193,37 +190,6 @@ void sprint_list(char *buffer, list_t *list){
     else 
         sprintf(buffer,"none\n");
 }
-
-/* void sprint_list(char *buffer, list_t *list){
-     if (list->size != 0){
-        //printf("list => size == %d; elements == { ",list->size);
-        node_t *atual = list->head;
-        //char *point; 
-        char *_Xstr;
-        char *_Ystr;
-        int count = 0;
-        //int size = 0;
-        while (atual != NULL){
-            itoa(atual->_X, _Xstr,10);
-            itoa(atual->_Y, _Ystr, 10);
-            for (int i = count; i < count + strlen(_Xstr); i++){
-                buffer[i] = _Xstr[i - count];
-            }
-            buffer[count + strlen(_Xstr)] = ' ';
-            count += strlen(_Xstr) + 1;
-            for (int i = count; i < count + strlen(_Ystr); i++){
-                buffer[i] = _Ystr[i - count];
-            }
-            buffer[count + strlen(_Ystr)] = ' ';
-            count += strlen(_Ystr) +1;
-            
-            //printf("%s\n\n\n\n\n\n\n",buffer);
-            atual = atual->next;
-        }       
-    }
-    else 
-        sprintf(buffer,"none");
-} */
 
 int search(list_t *list, int _X, int _Y){
 	if (list->size == 0){

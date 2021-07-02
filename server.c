@@ -11,8 +11,7 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#include <limits.h>
-#include <math.h>
+
 
 unsigned thread_exited = 0;
 
@@ -29,10 +28,6 @@ struct client_data{
     int client_socket;
     struct sockaddr_storage client_storage;
 };
-
-/* float distance(int _X1, int _Y1, int _X2, int _Y2){
-    return sqrt( ((_X2 -_X1)*(_X2 -_X1)) + ((_Y2 -_Y1)*(_Y2 -_Y1))  );
-} */
 
 char* commands(char* buf){	
 	
@@ -63,7 +58,7 @@ char* commands(char* buf){
 		int _X = -1,_Y = -1;
 		
 		sscanf(&buf[messages_sizes[i]],"%6s", command);
-		//printf("command: %.20s\n",command);
+		
 		
 		printf("COMMAND == %s-----",command);
 		if (strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0){
@@ -78,11 +73,7 @@ char* commands(char* buf){
 		}
 		else{
 			if (strcmp(command, "list") == 0){}
-			else {
-				//sprintf(response,"command not allowed");
-				//print_list(vaccine_sites);
-				//return response;
-			}
+			else {}
 		}
 		
 			
@@ -120,15 +111,13 @@ char* commands(char* buf){
 		}
 		else if(strcmp(command, "kill") == 0){
 			printf("entrou no if kill\n");
-			//response = (char*)malloc(5*sizeof(char));
-			//sprintf(&response[response_size],"");
 		}
 		else{}
-		//sprintf(&response[response_size],"\n");
+		
 	}
 
 		print_list(vaccine_sites);
-		//printf("response: %s\n",response);
+		
 	
 	return response;
 }
@@ -155,7 +144,6 @@ void* client_thread(void *data){
 			size = recv(client_data->client_socket, buf + count, BUFSIZ-1 - count, 0);
 			count += size;
 			if (strchr(buf,'\n')){
-				//printf("ENTROU NO BREAK\n");
 				break;
 			}			
 		}
@@ -164,69 +152,30 @@ void* client_thread(void *data){
 		}
 		char *res = commands(buf);
 
-		//printf("RESPONSE === %s",res);
-		for(int i = 0; i < size_response;i++){
-			//printf("-%c-",res[i]);
-		}
-		//printf("client_thread response: %s\n",res);
 		
-		//printf("[msg] %s, %d bytes\n ", client_addrstr, (int) count);
-		//printf("[msg] %s, %d bytes: %s\n ", client_addrstr, (int) count, buf);
 		memset(buf, 0, BUFSZ);
 		strcpy(buf,res);
 		if (strlen(buf) == 0){
 			printf("KILL\n");
 			count = send(client_data->client_socket, buf, 1, 0);
-			//break;
+
 		}
-		/* if (buf[strlen(res)+1] == '\0'){
-			printf("SIM1\n");
-			buf[strlen(res)+1] = '1';
-		}
-		 */
-		/* int t = 0;
-		for(int i=0; i < BUFSZ; i++){
-			if(buf[i] == '\0'){
-				buf[i] = '\n';
-				t++;
-			}
-		}
-		printf("Number of end of strinf in buf: %d \n",t);
-		t = 0;
-		for(int i=0; i < BUFSZ; i++){
-			if(buf[i] == '\0'){
-				t++;
-			}
-		} */
-		
 		memset(res, 0, RESSZ);
-		//sprintf(buf,"remote endpoint %.1000s\n", client_addrstr);
-		//sprintf(buf,"\n",);
-		//count = send(client_data->client_socket, buf, strlen(buf)+1, 0);
+		
 		for(int i=0; i < BUFSZ; i++){
 			if(buf[i] == '\0'){
 				size_response--;
 			}
 		}
-		//sprintf(&buf[size_response],"\n");
-		printf("size_response %d\n",size_response);
-		//printf("BUF === ");
-		for(int i = 0; i < size_response;i++){
-			//printf("%c %d",buf[i],i);
-		}
 		
-		//count = send(client_data->client_socket, buf, strlen(buf), 0);
+		printf("size_response %d\n",size_response);
+	
+		
+		
 		count = send(client_data->client_socket, buf, size_response, 0);
-		printf("tamanho buf: %ld \n",strlen(buf));
-		//if( count != strlen(buf) + 1 )
-		//	logexit("send");
-		//if( count != strlen(buf) + 1 )
-		//	logexit("send");
-		//printf("fim while thread\n");	
+		printf("tamanho buf: %ld \n",strlen(buf));	
 	}		
-    close(client_data->client_socket);
-	//printf("quebrou while client_thread\n");
-	//printf("posfim while thread\n");	
+    close(client_data->client_socket);	
 	thread_exited++;
     pthread_exit(EXIT_SUCCESS);
 }   

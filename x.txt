@@ -1,7 +1,0 @@
-connected to IPv4 127.0.0.1 9999
-ciclo: count = 13
-Size of  buf: 12
-44 44 added
-ciclo: count = 13
-Size of  buf: 12
-44 55 added
