@@ -50,6 +50,7 @@ char* commands(char* buf){
 	
 	for (int i = 0; i < n_newline;i++){
 		memset(command, 0, COMMANDSZ);
+		
 		if(i == 0)
 			response_size = -1;
 		response_size = strlen(response);
@@ -59,8 +60,7 @@ char* commands(char* buf){
 		
 		sscanf(&buf[messages_sizes[i]],"%6s", command);
 		
-		
-		
+				
 		if (strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0){
 			sscanf(&buf[messages_sizes[i]],"%s %d %d", command, &_X, &_Y);
 			
@@ -81,11 +81,13 @@ char* commands(char* buf){
 					add_end(vaccine_sites, _X, _Y);
 					sprintf(&response[response_size], "%d %d added\n", _X, _Y);
 				}
-				else
+				else{
 					sprintf(&response[response_size], "limit exceeded\n");
+				}				
 			}
-			else			
+			else{
 				sprintf(&response[response_size], "%d %d already exists\n" , _X, _Y);
+			}				
 		}
 		else if(strcmp(command, "rm") == 0 ){
 			if (remove_element(vaccine_sites, search(vaccine_sites, _X, _Y)) != -1){
@@ -94,18 +96,11 @@ char* commands(char* buf){
 			else
 				sprintf(&response[response_size], "%d %d does not exist\n" , _X, _Y);
 		}
-		else if( strcmp(command, "list") == 0 ){
-			if(vaccine_sites->size > 0){
+		else if( strcmp(command, "list") == 0 ){	
 				sprint_list(&response[response_size],vaccine_sites);
-			}
-			else{
-				sprint_list(&response[response_size],vaccine_sites);
-			}
 		}
-		else if (strcmp(command, "query") == 0 ){
-			
-				snearest(response, response_size, vaccine_sites, _X, _Y);
-			
+		else if (strcmp(command, "query") == 0 ){		
+				snearest(response, response_size, vaccine_sites, _X, _Y);			
 		}
 		else if(strcmp(command, "kill") == 0){}
 		else{}
@@ -160,8 +155,9 @@ void* client_thread(void *data){
 		}
 		
 		count = send(client_data->client_socket, buf, size_response, 0);	
-	}		
-    close(client_data->client_socket);	
+	}
+	printf("Deu Close\n");		
+    //close(client_data->client_socket);	
 	thread_exited++;
     pthread_exit(EXIT_SUCCESS);
 }   

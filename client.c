@@ -60,12 +60,16 @@ int main(int argc,char**argv){
 		if (strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0)
 			sscanf(buf,"%s %d %d", command, &_X, &_Y);
 
-
+		sprintf(&buf[strlen(buf)],"\n");
 
 		//numero de bytes
-		size_t count = send(s, buf, strlen(buf)+1, 0);
+		size_t count = send(s, buf, strlen(buf), 0);
+		if (strcmp(command, "kill") == 0 ){
+			close(s);
+			exit(EXIT_SUCCESS);
+		}
 		
-		if (count != strlen(buf)+1)
+		if (count != strlen(buf))
 			logexit("send");
 
 		memset(buf, 0, BUFSZ);
@@ -81,6 +85,7 @@ int main(int argc,char**argv){
 			if(count == 0){			
 				break;
 			}
+			
 			if(count == 500){
 				break;
 			}
@@ -102,6 +107,8 @@ int main(int argc,char**argv){
 			if((strchr(buf,'\n'))){
 				break;
 			}
+			if(strlen(buf) == 0)
+				break;
 		}
 		if (buf[total+1] == '\0'){
 			//printf("SIM2\n");
@@ -111,12 +118,28 @@ int main(int argc,char**argv){
 		//printf("buf: %s",buf);
 		printf("%s",buf);
 		//printf("\n");
-		if (strcmp(command, "kill") == 0 ){
+		/* if (strcmp(command, "kill") == 0 ){
 			//for (int k = 0;	k < 999999999;k++){k = k + 1 -1;}
 			//conexao terminada 			
+			printf("0\n");
+			break;
+		}
+		printf("SIZE of  buf: %ld\n",strlen(buf));
+		if (strlen(buf) == 1 && buf[0] == '\n'){
+			printf("1\n");
+			break;
+		}
+		if (strlen(buf) == 0){
+			printf("2\n");
+			break;
+		}	 */
+		if (strlen(buf) == 0){
+			printf("2\n");
 			break;
 		}
 	}
+	
+
 	close(s);
 	exit(EXIT_SUCCESS);
 }
