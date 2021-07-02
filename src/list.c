@@ -1,9 +1,9 @@
+#include "list.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <limits.h>
-#include "list.h"
 
 list_t *create_list(){
     //retorna uma list vazia alocada no heap
