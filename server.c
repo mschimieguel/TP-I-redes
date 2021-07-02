@@ -53,21 +53,19 @@ char* commands(char* buf){
 		if(i == 0)
 			response_size = -1;
 		response_size = strlen(response);
-		printf("Response size == %d, ciclo ==  %d\n",response_size,i);
+		
 
 		int _X = -1,_Y = -1;
 		
 		sscanf(&buf[messages_sizes[i]],"%6s", command);
 		
 		
-		printf("COMMAND == %s-----",command);
+		
 		if (strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0){
 			sscanf(&buf[messages_sizes[i]],"%s %d %d", command, &_X, &_Y);
 			
-			printf("_X == %d and _Y == %d \n",_X,_Y);
 			if(_X < 0 || _X > 9999 || _Y < 0 || _Y > 9999 ){
 				sprintf(&response[response_size],"position not allowed\n");
-				print_list(vaccine_sites);
 				return response;
 			}
 		}
@@ -109,16 +107,11 @@ char* commands(char* buf){
 				snearest(response, response_size, vaccine_sites, _X, _Y);
 			
 		}
-		else if(strcmp(command, "kill") == 0){
-			printf("entrou no if kill\n");
-		}
+		else if(strcmp(command, "kill") == 0){}
 		else{}
 		
 	}
 
-		print_list(vaccine_sites);
-		
-	
 	return response;
 }
  
@@ -147,18 +140,16 @@ void* client_thread(void *data){
 				break;
 			}			
 		}
+		printf("[msg] from %s, %d bytes:\n %s", client_addrstr, (int) count, buf);
 		if (size <= 5 && (strstr(buf, "add") || strstr(buf, "rm") || strstr(buf ,"query") )) {
 			printf("ENTROU NO IF\n");
 		}
 		char *res = commands(buf);
-
 		
 		memset(buf, 0, BUFSZ);
 		strcpy(buf,res);
 		if (strlen(buf) == 0){
-			printf("KILL\n");
 			count = send(client_data->client_socket, buf, 1, 0);
-
 		}
 		memset(res, 0, RESSZ);
 		
@@ -168,12 +159,7 @@ void* client_thread(void *data){
 			}
 		}
 		
-		printf("size_response %d\n",size_response);
-	
-		
-		
-		count = send(client_data->client_socket, buf, size_response, 0);
-		printf("tamanho buf: %ld \n",strlen(buf));	
+		count = send(client_data->client_socket, buf, size_response, 0);	
 	}		
     close(client_data->client_socket);	
 	thread_exited++;
