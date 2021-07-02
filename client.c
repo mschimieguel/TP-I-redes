@@ -40,7 +40,8 @@ int main(int argc,char**argv){
 
 	char buf[BUFSZ];
 	while(1){		
-			
+	
+		
 		//inicializar buffer com 0 
 		memset(buf, 0, BUFSZ);
 		//printf("<mensagem>\n");
@@ -78,8 +79,8 @@ int main(int argc,char**argv){
 			total += count;
 			/* if (count == 0 || strcmp(command, "list") == 0 || strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0  || strcmp(command, "kill") == 0 ){	 */
 				//conexao terminada 
-			printf("ciclo: count = %ld\n",count);
-			printf("Size of  buf: %ld\n",strlen(buf));
+			//printf("ciclo: count = %ld\n",count);
+			//printf("Size of  buf: %ld\n",strlen(buf));
 			if(count == 0){			
 				break;
 			}
@@ -87,14 +88,15 @@ int main(int argc,char**argv){
 			if(count == 500){
 				break;
 			}
-			if((strchr(buf,'\n'))){
+			if(strchr(buf,'\n')){
 				break;
 			}
 			if(strlen(buf) == 0)
 				break;
 		}
 		
-		printf("%s",buf);
+		//printf("%s",buf);
+		printf("[msg] from server %s, %d bytes:\n %s", addrstr, (int) count, buf);
 		
 		if (strlen(buf) == 0){
 			printf("2\n");
@@ -102,6 +104,7 @@ int main(int argc,char**argv){
 		}
 	}
 	
+
 	close(s);
 	exit(EXIT_SUCCESS);
 }

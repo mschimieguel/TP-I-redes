@@ -170,8 +170,15 @@ void sprint_list(char *buffer, list_t *list){
         
         while (atual != NULL){
             
-            if (atual == list->head)
-                sprintf(point, "%d %d", atual->_X, atual->_Y);
+            if (atual == list->head){
+                 if(atual->next != NULL){
+                    sprintf(point, "%d %d", atual->_X, atual->_Y);;
+                }
+                else{
+                    sprintf(point, "%d %d\n", atual->_X, atual->_Y);
+                }                    
+            }
+               
             else{
                 if(atual->next != NULL){
                     sprintf(point, " %d %d", atual->_X, atual->_Y);

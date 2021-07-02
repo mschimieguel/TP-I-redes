@@ -135,7 +135,7 @@ void* client_thread(void *data){
 				break;
 			}			
 		}
-		printf("[msg] from %s, %d bytes:\n %s", client_addrstr, (int) count, buf);
+		printf("[msg] from  client %s, %d bytes:\n %s", client_addrstr, (int) count, buf);
 		if (size <= 5 && (strstr(buf, "add") || strstr(buf, "rm") || strstr(buf ,"query") )) {
 			printf("ENTROU NO IF\n");
 		}
@@ -145,6 +145,8 @@ void* client_thread(void *data){
 		strcpy(buf,res);
 		if (strlen(buf) == 0){
 			count = send(client_data->client_socket, buf, 1, 0);
+			
+
 		}
 		memset(res, 0, RESSZ);
 		
@@ -231,11 +233,7 @@ int main(int argc, char **argv){
 
         pthread_t tid;
         pthread_create(&tid, NULL, client_thread, cdata);
-
-		//printf("n_threads: %d\n",n_threads);
-		//n_threads++;
 	}
-
 	exit(EXIT_SUCCESS);
 }
 
