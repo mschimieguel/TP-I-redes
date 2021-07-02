@@ -1,5 +1,6 @@
 # TP1 
 
+## Instructions 
 
 Execute the command `make` to compile `server.c` and `client.c` into the executable files `server` and`client`.
 
