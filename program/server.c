@@ -159,7 +159,7 @@ void* client_thread(void *data){
 		count = send(client_data->client_socket, buf, size_response, 0);	
 	}
 	printf("Deu Close\n");		
-    //close(client_data->client_socket);	
+    close(client_data->client_socket);	
 	thread_exited++;
     pthread_exit(EXIT_SUCCESS);
 }   
