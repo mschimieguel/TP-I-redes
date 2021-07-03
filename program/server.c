@@ -152,7 +152,8 @@ void* client_thread(void *data){
 				size_response--;
 			}
 		}
-		count = send(client_data->client_socket, buf, size_response, 0);	
+		count = send(client_data->client_socket, buf, size_response, 0);
+		free(res);	
 	}		
     close(client_data->client_socket);	
 	thread_exited++;
