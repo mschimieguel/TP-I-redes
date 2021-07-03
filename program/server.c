@@ -103,8 +103,7 @@ char* commands(char* buf){
 				snearest(response, response_size, vaccine_sites, _X, _Y);			
 		}
 		else if(strcmp(command, "kill") == 0){}
-		else{}
-		
+		else{}	
 	}
 
 	return response;
@@ -145,8 +144,6 @@ void* client_thread(void *data){
 		strcpy(buf,res);
 		if (strlen(buf) == 0){
 			count = send(client_data->client_socket, buf, 1, 0);
-			
-
 		}
 		memset(res, 0, RESSZ);
 		
@@ -155,7 +152,6 @@ void* client_thread(void *data){
 				size_response--;
 			}
 		}
-		
 		count = send(client_data->client_socket, buf, size_response, 0);	
 	}
 	printf("Deu Close\n");		

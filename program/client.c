@@ -44,8 +44,7 @@ int main(int argc,char**argv){
 		
 		//inicializar buffer com 0 
 		memset(buf, 0, BUFSZ);
-		//printf("<mensagem>\n");
-		//fflush(stdin);
+		
 		fgets(buf, BUFSZ, stdin);
 		if(strlen(buf) == 0)
 			break;
@@ -53,7 +52,6 @@ int main(int argc,char**argv){
 		memset(command, 0, COMMANDSZ);
 		
 		int _X = -1,_Y = -1;
-		//printf("buf: %s",buf);
 		
 		sscanf(buf,"%s", command);
 
@@ -77,10 +75,7 @@ int main(int argc,char**argv){
 		while(1){
 			count = recv(s, buf + total,BUFSZ - total,0);
 			total += count;
-			/* if (count == 0 || strcmp(command, "list") == 0 || strcmp(command, "add") == 0 || strcmp(command, "rm") == 0 || strcmp(command, "query") == 0  || strcmp(command, "kill") == 0 ){	 */
-				//conexao terminada 
-			//printf("ciclo: count = %ld\n",count);
-			//printf("Size of  buf: %ld\n",strlen(buf));
+		
 			if(count == 0){			
 				break;
 			}
@@ -95,7 +90,6 @@ int main(int argc,char**argv){
 				break;
 		}
 		
-		//printf("%s",buf);
 		printf("[msg] from server %s, %d bytes:\n %s", addrstr, (int) count, buf);
 		
 		if (strlen(buf) == 0){
@@ -103,7 +97,6 @@ int main(int argc,char**argv){
 			break;
 		}
 	}
-	
 
 	close(s);
 	exit(EXIT_SUCCESS);
