@@ -41,7 +41,6 @@ int main(int argc,char**argv){
 	char buf[BUFSZ];
 	while(1){		
 	
-		
 		//inicializar buffer com 0 
 		memset(buf, 0, BUFSZ);
 		
@@ -97,7 +96,6 @@ int main(int argc,char**argv){
 			break;
 		}
 	}
-
 	close(s);
 	exit(EXIT_SUCCESS);
 }

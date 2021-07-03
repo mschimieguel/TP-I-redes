@@ -153,8 +153,7 @@ void* client_thread(void *data){
 			}
 		}
 		count = send(client_data->client_socket, buf, size_response, 0);	
-	}
-	printf("Deu Close\n");		
+	}		
     close(client_data->client_socket);	
 	thread_exited++;
     pthread_exit(EXIT_SUCCESS);
@@ -230,6 +229,8 @@ int main(int argc, char **argv){
         pthread_t tid;
         pthread_create(&tid, NULL, client_thread, cdata);
 	}
+	//free memory
+	delete_list(vaccine_sites);
 	exit(EXIT_SUCCESS);
 }
 
